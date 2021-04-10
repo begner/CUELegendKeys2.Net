@@ -21,6 +21,8 @@ namespace CueLegendKey2
 
         public bool useMocks = false;
 
+        public bool lastLoadErrors = false;
+
         public delegate void loadJSONDecodeCallback(string jsonData);
 
         public delegate void loadJSONLoadedCallback();
@@ -32,6 +34,7 @@ namespace CueLegendKey2
         public string dataDragonHost = "http://ddragon.leagueoflegends.com";
         public string clientHost = "https://127.0.0.1:2999";
         public string locale = "de_DE";
+        public string currentVersion { get; set; }
 
         public void LoadData()
         {
@@ -57,6 +60,7 @@ namespace CueLegendKey2
 
         private void LoadJSONData(string uri, string mockFile, loadJSONDecodeCallback decode, loadJSONLoadedCallback onReady)
         {
+            this.lastLoadErrors = false;
             if (this.useMocks)
             {
                 // MOCK
@@ -86,6 +90,7 @@ namespace CueLegendKey2
             catch(Exception exception)
             {
                 Logger.Instance.Debug(exception.Message);
+                this.lastLoadErrors = true;
                 onReady();
                 // do nothing here
             }

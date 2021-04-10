@@ -17,14 +17,17 @@
 
             <StackPanel Margin="10,10,10,10">
                 <TextBlock Text="Version"  />
-                <TextBlock x:Name="lolApiVersion" Text=""  />
+                <TextBlock x:Name="uiLolApiVersion" Text=""  />
+            </StackPanel>
+
+            <StackPanel Margin="10,10,10,10">
+                <TextBlock Text="Champions Loaded"  />
+                <TextBlock x:Name="uiChampionCount" Text=""  />
             </StackPanel>
 
             <StackPanel Margin="10,10,10,10">
                 <TextBlock Text="Update Interval"  />
-                <TextBlock x:Name="currentUpdateInterval" Text="0.0"  />
-
-                <Grid Margin="0,10,0,0">
+                <Grid Margin="0,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -34,14 +37,18 @@
                         <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="updateIntervalInput" TextWrapping="Wrap" Text="2000" 
+                    <TextBox x:Name="uiUpdateIntervalInput" TextWrapping="Wrap" Text="2000" 
                              Width="Auto"
                              Grid.Row="0" Grid.Column="0"
                              />
-                    <Button x:Name="saveUpdateInterval" Content="Save"
-                            Grid.Row="0" Grid.Column="1" Click="saveUpdateIntervalClick"/>
+                    <Button Content="Save"
+                            Grid.Row="0" Grid.Column="1" Click="uiSaveUpdateIntervalClick"/>
 
                 </Grid>
+            </StackPanel>
+
+            <StackPanel Margin="10,10,10,10">
+                <CheckBox Content="Use Data Mocks" x:Name="uiUseMocks" Grid.Row="0" Grid.Column="0" Checked="uiUseMocksChecked" Unchecked="uiUseMocksUnchecked" />
             </StackPanel>
 
         </StackPanel>
@@ -49,37 +56,37 @@
         <StackPanel Margin="10,10,10,10" Grid.Row="0" Grid.Column="1">
 
             <StackPanel Margin="10,10,10,10">
-                <TextBlock Text="Connect Time"  />
-                <TextBlock x:Name="textBlockRequestTime" Text=""  />
-                <TextBlock x:Name="textBlockResponseTime" Text=""  />
+                <TextBlock Text="Game State"  />
+                <TextBlock x:Name="uiGameState" Text=""  />
             </StackPanel>
 
+            <StackPanel Margin="10,10,10,10">
+                <TextBlock Text="Connect Time"  />
+                <TextBlock x:Name="uiRequestTime" Text=""  />
+                <TextBlock x:Name="uiResponseDuration" Text=""  />
+            </StackPanel>
+            
             <StackPanel Margin="10,10,10,10">
                 <TextBlock Text="Content"  />
-                <TextBlock x:Name="textBlockPlayer" Text=""  />
-                <TextBlock x:Name="textBlockPlayerStats" Text=""  />
-                <TextBlock x:Name="textBlockAbilities" Text=""  />
-            </StackPanel>
-
-            <StackPanel Margin="10,10,10,10">
-                <TextBlock Text="Health"  />
+                <TextBlock x:Name="uiPlayer" Text=""  />
+                <TextBlock x:Name="uiPlayerStats" Text=""  />
+                <TextBlock x:Name="uiAbilities" Text=""  />
+            
+                <TextBlock Text="Health" Margin="0,5,0,0"  />
                 <ProgressBar 
                              Height="17" 
-                             x:Name="progressHealth"          
-                             Value="50" 
+                             x:Name="uiProgressHealth"          
+                             Value="0" 
                              Maximum="100" 
                              Minimum="0" />
-            </StackPanel>
 
-
-            <StackPanel Margin="10,10,10,10">
-                <TextBlock Text="Mana/Energy"  />
+                <TextBlock Text="Mana/Energy" Margin="0,5,0,0"  />
                 <ProgressBar Height="17" 
-                             x:Name="progressRessource"      
-                             Value="50" 
+                             x:Name="uiProgressRessource"      
+                             Value="0" 
                              Maximum="100" 
                              Minimum="0"
-                             Foreground="Blue"/>
+                             />
             </StackPanel>
         </StackPanel>
 

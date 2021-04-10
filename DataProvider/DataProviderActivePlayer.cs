@@ -137,11 +137,7 @@ namespace CueLegendKey2
         public Abilities abilities = new Abilities();
 
         private List<Champion> champions = new List<Champion>();
-        
-        public string currentVersion { get; set; }
-        public string host = "http://ddragon.leagueoflegends.com";
-        public string locale = "de_DE";
-
+       
         public override string GetUri()
         {
             return $"{clientHost}/liveclientdata/activeplayer";

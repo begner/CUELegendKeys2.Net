@@ -29,147 +29,110 @@ namespace CueLegendKey2
 
     public partial class MainWindow : Window
     {
-        private Timer aTimer;
+        private Timer reloadLiveDataTimer;
 
-        private DataProviderVersions dataProviderVersions = new DataProviderVersions();
-        private DataProviderChampions dataProviderChampions = new DataProviderChampions();
-        private DataProviderActivePlayer dataProviderActivePlayer = new DataProviderActivePlayer();
-        private DataProviderChampionDetails dataProviderChampionDetails = new DataProviderChampionDetails();
-        private DataProviderPlayerList dataProviderPlayerList = new DataProviderPlayerList();
-        private bool liveLoadInProgress = false;
+        private int reloadTimerIntervalDefault = 2000;
+        private int reloadTimerMin = 150;
+
+        DataFetcher dataFetcher = new DataFetcher();
 
         public MainWindow()
         {
             InitializeComponent();
-            textBlockResponseTime.Text = "";
-            textBlockRequestTime.Text = "";
-            textBlockPlayer.Text = "";
-            textBlockAbilities.Text = "";
 
-            aTimer = new System.Timers.Timer();
-            setTimerInterval(2000);
-            aTimer.Elapsed += OnTimedEvent;
-            aTimer.AutoReset = true;
-            aTimer.Enabled = true;
+            this.dataFetcher.OnMainData += this.MainDataLoaded;
+            this.dataFetcher.OnLiveData += this.LiveDataLoaded;
+            this.dataFetcher.OnLiveDataError += this.LiveDataError;
 
-            dataProviderVersions.OnData += this.VersionLoaded;
-            dataProviderChampions.OnData += this.ChampionsLoaded;
-            dataProviderActivePlayer.OnData += this.ActivePlayerLoaded;
-            dataProviderPlayerList.OnData += this.PlayerListLoaded;
-            dataProviderChampionDetails.OnData += this.ChampionDetailsLoaded;
-
-
-            dataProviderVersions.LoadData();
-
-
+            this.dataFetcher.LoadMainData();
         }
 
-        public void VersionLoaded(object sender, DataProviderLoadedEventArgs e)
+        public void MainDataLoaded(object sender, DataFetcherLoadedEventArgs e)
         {
-            Logger.Instance.Debug("VersionLoaded");
-            dataProviderChampions.currentVersion = dataProviderVersions.getCurrentVersion();
-            dataProviderChampions.LoadData();
+            this.uiLolApiVersion.Text = this.dataFetcher.GetVersion().getCurrentVersion();
+            this.uiChampionCount.Text = this.dataFetcher.GetChampions().getChampionCount().ToString();
+
+            // Load first time...
+            this.dataFetcher.LoadLiveData();
+
+            // Start Reload Timer
+            this.reloadLiveDataTimer = new System.Timers.Timer();
+            setReloadLiveDataTimerInterval(this.reloadTimerIntervalDefault);
+            this.reloadLiveDataTimer.Elapsed += this.ReloadLiveData;
+            this.reloadLiveDataTimer.AutoReset = true;
+            this.reloadLiveDataTimer.Enabled = true;
         }
-        public void ChampionsLoaded(object sender, DataProviderLoadedEventArgs e)
+
+        private void ReloadLiveData(Object source, System.Timers.ElapsedEventArgs e)
         {
-            Logger.Instance.Debug("ChampionsLoaded");
-            this.LoadLiveData();
+            this.dataFetcher.LoadLiveData();
         }
 
-
-
-        public void LoadLiveData()
-        {
-            if (!liveLoadInProgress)
-            {
-                liveLoadInProgress = true;
-                Logger.Instance.Debug("LoadLiveData");
-                dataProviderActivePlayer.LoadData();
-            }
-        }
-
-        public void ActivePlayerLoaded(object sender, DataProviderLoadedEventArgs e)
-        {
-            Logger.Instance.Debug("ActivePlayerLoaded");
-            dataProviderPlayerList.LoadData();
-        }
-
-        public void PlayerListLoaded(object sender, DataProviderLoadedEventArgs e) 
-        { 
-            Logger.Instance.Debug("PlayerListLoaded");
-            string championName = dataProviderPlayerList.GetChampionNameBySummonerName(dataProviderActivePlayer.summonerName);
-            string championId = dataProviderChampions.GetChampionIDbyName(championName);
-            dataProviderChampionDetails.championId = championId;
-            dataProviderChampionDetails.currentVersion = dataProviderVersions.getCurrentVersion();
-            dataProviderChampionDetails.LoadData();
-        }
-
-        public void ChampionDetailsLoaded(object sender, DataProviderLoadedEventArgs e)
-        {
-            Logger.Instance.Debug("ChampionDetailsLoaded");
-            // Merge cooldowns from ChampionDetails to Abilities
-            foreach (ChampionSpell spell in dataProviderChampionDetails.championSpells)
-            {
-                foreach (Skill skill in dataProviderActivePlayer.abilities.getSkillsAsList())
-                {
-                    if (skill.id == spell.id)
-                    {
-                        skill.cooldown = spell.cooldown;
-                    }
-                }
-            }
-            liveLoadInProgress = false;
-            this.UpdateUI();
-        }
-
-        void setTimerInterval(double interval)
-        {
-            if (interval < 250)
-            {
-                interval = 250;
-            }
-            aTimer.Interval = interval;
-            updateIntervalInput.Text = interval.ToString();
-        }
-
-
-        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        public void LiveDataLoaded(object sender, DataFetcherLoadedEventArgs e)
         {
             this.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
             {
-                this.textBlockRequestTime.Text = e.SignalTime.ToString();
-                this.textBlockResponseTime.Text = "...";
+                this.uiRequestTime.Text = e.loadStartTime.ToString();
+                this.uiResponseDuration.Text = e.getRequestDurationInMs().ToString() + "ms";
+                this.uiGameState.Text = "GAME IN PROGRESS";
+
+                string summonerName = this.dataFetcher.GetActivePlayer().summonerName;
+                this.uiPlayer.Text = this.dataFetcher.GetPlayerList().GetPlayerBySummonerName(summonerName).ToString();
+
+                DataProviderActivePlayer activePlayer = this.dataFetcher.GetActivePlayer();
+                PlayerState playerStats = activePlayer.playerStats;
+
+                double abilityHaste = playerStats.abilityHaste;
+                this.uiAbilities.Text = activePlayer.abilities.ToStringWithLiveCooldown(abilityHaste);
+                this.uiPlayerStats.Text = playerStats.ToString();
+
+                this.uiProgressHealth.Maximum = playerStats.maxHealth;
+                this.uiProgressHealth.Value = playerStats.currentHealth;
+
+                this.uiProgressRessource.Maximum = playerStats.resourceMax;
+                this.uiProgressRessource.Value = playerStats.resourceValue;
+                this.uiProgressRessource.Foreground = playerStats.getResourceColor();
             }));
-            this.LoadLiveData();
         }
 
-        void UpdateUI()
+        public void LiveDataError(object sender, DataFetcherLoadedEventArgs e)
         {
             this.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
             {
-                this.textBlockResponseTime.Text = DateTime.Now.ToString();
-                this.textBlockPlayer.Text = dataProviderPlayerList.GetPlayerBySummonerName(dataProviderActivePlayer.summonerName).ToString();
+                this.uiRequestTime.Text = e.loadStartTime.ToString();
+                this.uiResponseDuration.Text = e.getRequestDurationInMs().ToString() + "ms";
+                
+                this.uiGameState.Text = "GAME NOT STARTED";
 
-                this.textBlockAbilities.Text = dataProviderActivePlayer.abilities.ToStringWithLiveCooldown(dataProviderActivePlayer.playerStats.abilityHaste);
-                this.textBlockPlayerStats.Text = dataProviderActivePlayer.playerStats.ToString();
+                this.uiPlayer.Text = "";
 
-                this.progressHealth.Maximum = dataProviderActivePlayer.playerStats.maxHealth;
-                this.progressHealth.Value = dataProviderActivePlayer.playerStats.currentHealth;
+                this.uiAbilities.Text = "";
+                this.uiPlayerStats.Text = "";
 
-                this.progressRessource.Maximum = dataProviderActivePlayer.playerStats.resourceMax;
-                this.progressRessource.Value = dataProviderActivePlayer.playerStats.resourceValue;
-                this.progressRessource.Foreground = dataProviderActivePlayer.playerStats.getResourceColor();
+                this.uiProgressHealth.Maximum = 1;
+                this.uiProgressHealth.Value = 0;
+
+                this.uiProgressRessource.Maximum = 1;
+                this.uiProgressRessource.Value = 0;
             }));
-            
         }
-        
 
-        private void saveUpdateIntervalClick(object sender, RoutedEventArgs e)
+        void setReloadLiveDataTimerInterval(double interval)
+        {
+            if (interval < this.reloadTimerMin)
+            {
+                interval = this.reloadTimerMin;
+            }
+            this.reloadLiveDataTimer.Interval = interval;
+            this.uiUpdateIntervalInput.Text = interval.ToString();
+        }
+
+        private void uiSaveUpdateIntervalClick(object sender, RoutedEventArgs e)
         {
             Logger.Instance.Debug("saveUpdateIntervalClick");
-            string stringValue = updateIntervalInput.Text;
+            string stringValue = this.uiUpdateIntervalInput.Text;
             
-            double defaultValue = 2000;
+            double defaultValue = this.reloadTimerIntervalDefault;
             
             double doubleValue = 0;
 
@@ -183,8 +146,17 @@ namespace CueLegendKey2
                 doubleValue = defaultValue;
             }
 
-            this.setTimerInterval(doubleValue);
+            this.setReloadLiveDataTimerInterval(doubleValue);
+        }
 
+        private void uiUseMocksChecked(object sender, RoutedEventArgs e)
+        {
+            this.dataFetcher.setUseMocks(true);    
+        }
+
+        private void uiUseMocksUnchecked(object sender, RoutedEventArgs e)
+        {
+            this.dataFetcher.setUseMocks(false);
         }
     }
 

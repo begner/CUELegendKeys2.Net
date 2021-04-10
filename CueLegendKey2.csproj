@@ -68,6 +68,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataFetcher.cs" />
+    <Compile Include="DataProvider\DataProviderAbilityImage.cs" />
     <Compile Include="DataProvider\DataProviderPlayerList.cs" />
     <Compile Include="DataProvider\DataProviderChampionDetails.cs" />
     <Compile Include="DataProvider\DataProviderActivePlayer.cs" />

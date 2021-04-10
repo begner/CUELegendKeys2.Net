@@ -26,6 +26,11 @@ namespace CueLegendKey2
     {
         private List<Champion> champions = new List<Champion>();
 
+        public int getChampionCount()
+        {
+            return this.champions.Count;
+        }
+
         public string GetChampionIDbyName(string championName)
         {
             if (championName == null)
@@ -42,9 +47,6 @@ namespace CueLegendKey2
             }
             return "";
         }
-
-        public string currentVersion { get; set; }
-        public string locale = "de_DE";
 
         public override string GetUri()
         {

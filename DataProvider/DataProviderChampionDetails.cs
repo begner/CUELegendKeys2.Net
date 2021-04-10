@@ -13,6 +13,7 @@ namespace CueLegendKey2
     {
         public string name { get; set; }
         public string id { get; set; }
+        public string fullImageName { get; set; }
         public List<double> cooldown { get; set; }
         public List<double> cost { get; set; }
     }
@@ -22,8 +23,6 @@ namespace CueLegendKey2
         public string championId = "";
 
         public List<ChampionSpell> championSpells = new List<ChampionSpell>();
-
-        public string currentVersion { get; set; }
 
         public override string GetUri()
         {
@@ -50,6 +49,7 @@ namespace CueLegendKey2
             {
                 // JToken.ToObject is a helper method that uses JsonSerializer internally
                 ChampionSpell spell = result.ToObject<ChampionSpell>();
+                spell.fullImageName = result["image"]["full"].ToObject<string>();
                 this.championSpells.Add(spell);
             }
         }
