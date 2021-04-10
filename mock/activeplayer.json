@@ -1,0 +1,144 @@
+{
+	"abilities": {
+		"E": {
+			"abilityLevel": 0,
+			"displayName": "Geschmolzener Schild",
+			"id": "AnnieE",
+			"rawDescription": "GeneratedTip_Spell_AnnieE_Description",
+			"rawDisplayName": "GeneratedTip_Spell_AnnieE_DisplayName"
+		},
+		"Passive": {
+			"displayName": "Pyromanie",
+			"id": "AnniePassive",
+			"rawDescription": "GeneratedTip_Passive_AnniePassive_Description",
+			"rawDisplayName": "GeneratedTip_Passive_AnniePassive_DisplayName"
+		},
+		"Q": {
+			"abilityLevel": 0,
+			"displayName": "Auflösung",
+			"id": "AnnieQ",
+			"rawDescription": "GeneratedTip_Spell_AnnieQ_Description",
+			"rawDisplayName": "GeneratedTip_Spell_AnnieQ_DisplayName"
+		},
+		"R": {
+			"abilityLevel": 0,
+			"displayName": "Tibbers beschwören",
+			"id": "AnnieR",
+			"rawDescription": "GeneratedTip_Spell_AnnieR_Description",
+			"rawDisplayName": "GeneratedTip_Spell_AnnieR_DisplayName"
+		},
+		"W": {
+			"abilityLevel": 0,
+			"displayName": "Verbrennen",
+			"id": "AnnieW",
+			"rawDescription": "GeneratedTip_Spell_AnnieW_Description",
+			"rawDisplayName": "GeneratedTip_Spell_AnnieW_DisplayName"
+		}
+	},
+	"championStats": {
+		"abilityHaste": 0.0,
+		"abilityPower": 18.0,
+		"armor": 19.0,
+		"armorPenetrationFlat": 0.0,
+		"armorPenetrationPercent": 1.0,
+		"attackDamage": 50.0,
+		"attackRange": 625.0,
+		"attackSpeed": 0.5789999961853027,
+		"bonusArmorPenetrationPercent": 1.0,
+		"bonusMagicPenetrationPercent": 1.0,
+		"cooldownReduction": 0.0,
+		"critChance": 0.0,
+		"critDamage": 175.0,
+		"currentHealth": 524.0,
+		"healthRegenRate": 1.100000023841858,
+		"lifeSteal": 0.0,
+		"magicLethality": 0.0,
+		"magicPenetrationFlat": 0.0,
+		"magicPenetrationPercent": 1.0,
+		"magicResist": 38.0,
+		"maxHealth": 524.0,
+		"moveSpeed": 340.0,
+		"physicalLethality": 0.0,
+		"resourceMax": 418.0,
+		"resourceRegenRate": 1.600000023841858,
+		"resourceType": "MANA",
+		"resourceValue": 418.0,
+		"spellVamp": 0.0,
+		"tenacity": 0.0
+	},
+	"currentGold": 500.0,
+	"fullRunes": {
+		"generalRunes": [
+			{
+				"displayName": "Elektrisieren",
+				"id": 8112,
+				"rawDescription": "perk_tooltip_Electrocute",
+				"rawDisplayName": "perk_displayname_Electrocute"
+			},
+			{
+				"displayName": "Perfider Trick",
+				"id": 8126,
+				"rawDescription": "perk_tooltip_CheapShot",
+				"rawDisplayName": "perk_displayname_CheapShot"
+			},
+			{
+				"displayName": "Argus' Vermächtnis",
+				"id": 8138,
+				"rawDescription": "perk_tooltip_EyeballCollection",
+				"rawDisplayName": "perk_displayname_EyeballCollection"
+			},
+			{
+				"displayName": "Erbarmungsloser Jäger",
+				"id": 8105,
+				"rawDescription": "perk_tooltip_8105",
+				"rawDisplayName": "perk_displayname_8105"
+			},
+			{
+				"displayName": "Manafluss",
+				"id": 8226,
+				"rawDescription": "perk_tooltip_8226",
+				"rawDisplayName": "perk_displayname_8226"
+			},
+			{
+				"displayName": "Hitzewelle",
+				"id": 8237,
+				"rawDescription": "perk_tooltip_Scorch",
+				"rawDisplayName": "perk_displayname_Scorch"
+			}
+		],
+		"keystone": {
+			"displayName": "Elektrisieren",
+			"id": 8112,
+			"rawDescription": "perk_tooltip_Electrocute",
+			"rawDisplayName": "perk_displayname_Electrocute"
+		},
+		"primaryRuneTree": {
+			"displayName": "Dominanz",
+			"id": 8100,
+			"rawDescription": "perkstyle_tooltip_7200",
+			"rawDisplayName": "perkstyle_displayname_7200"
+		},
+		"secondaryRuneTree": {
+			"displayName": "Zauberei",
+			"id": 8200,
+			"rawDescription": "perkstyle_tooltip_7202",
+			"rawDisplayName": "perkstyle_displayname_7202"
+		},
+		"statRunes": [
+			{
+				"id": 5008,
+				"rawDescription": "perk_tooltip_StatModAdaptive"
+			},
+			{
+				"id": 5008,
+				"rawDescription": "perk_tooltip_StatModAdaptive"
+			},
+			{
+				"id": 5003,
+				"rawDescription": "perk_tooltip_StatModMagicResist"
+			}
+		]
+	},
+	"level": 1,
+	"summonerName": "playerX"
+}

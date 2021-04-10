@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CueLegendKey2", "CueLegendKey2.csproj", "{F41BC482-FC92-4678-9B4E-D50E62A19228}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F41BC482-FC92-4678-9B4E-D50E62A19228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F41BC482-FC92-4678-9B4E-D50E62A19228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F41BC482-FC92-4678-9B4E-D50E62A19228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F41BC482-FC92-4678-9B4E-D50E62A19228}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80574337-BF4B-43B3-983E-65C08BC36F11}
+	EndGlobalSection
+EndGlobal
