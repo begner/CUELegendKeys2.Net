@@ -31,8 +31,9 @@ namespace CueLegendKey2
             return "./mock/versions.json";
         }
 
-        public override void JsonDecode(string jsonData)
+        protected override void DecodeData(System.IO.Stream stream)
         {
+            string jsonData = this.StreamToString(stream);
             JObject playerListRawData = JObject.Parse("{\"versions\": " + jsonData + "}");
             IList<JToken> versionList = playerListRawData["versions"].Children().ToList();
 

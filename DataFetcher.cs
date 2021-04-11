@@ -55,13 +55,31 @@ namespace CueLegendKey2
             return dataProviderPlayerList;
         }
 
-        public void setUseMocks(bool state)
+
+        private bool localClientMock = true;
+        public bool GetUseLocalClientMock()
         {
+            return this.localClientMock;
+        }
+        public void SetUseLocalClientMock(bool state)
+        {
+            this.localClientMock = state;
+            this.dataProviderActivePlayer.useMocks = state;
+            this.dataProviderPlayerList.useMocks = state;
+        }
+
+
+        private bool dataDragonMock = false;
+        public bool GetUseDataDragonMocks()
+        {
+            return this.dataDragonMock;
+        }
+        public void SetUseDataDragonMocks(bool state)
+        {
+            this.dataDragonMock = state;
             this.dataProviderVersions.useMocks = state;
             this.dataProviderChampions.useMocks = state;
-            this.dataProviderActivePlayer.useMocks = state;
             this.dataProviderChampionDetails.useMocks = state;
-            this.dataProviderPlayerList.useMocks = state;
         }
 
         private DateTime loadMainDataStartTime;
@@ -115,17 +133,24 @@ namespace CueLegendKey2
 
         // 2st Stream
         // ###########################################################################
+        private bool loadLoveDataInProgress = false;
+
         public void LoadLiveData()
         {
-            this.loadLiveDataStartTime = DateTime.Now;
-            Logger.Instance.Debug("LoadLiveData");
-            this.dataProviderActivePlayer.LoadData();
+            if (!loadLoveDataInProgress)
+            {
+                this.loadLoveDataInProgress = true;
+
+                this.loadLiveDataStartTime = DateTime.Now;
+                Logger.Instance.Debug("LoadLiveData");
+                this.dataProviderActivePlayer.LoadData();
+            }     
         }
 
         private void ActivePlayerLoaded(object sender, DataProviderLoadedEventArgs e)
         {
             
-            if (!dataProviderActivePlayer.lastLoadErrors)
+            if (!dataProviderActivePlayer.loadHasErrors())
             {
                 Logger.Instance.Debug("LoadLiveData ActivePlayerLoaded");
                 this.dataProviderPlayerList.LoadData();
@@ -137,9 +162,10 @@ namespace CueLegendKey2
 
         }
 
+      
         private void PlayerListLoaded(object sender, DataProviderLoadedEventArgs e)
         {
-            if (!dataProviderPlayerList.lastLoadErrors) { 
+            if (!dataProviderPlayerList.loadHasErrors()) { 
                 Logger.Instance.Debug("LoadLiveData PlayerListLoaded");
                 string summonerName = this.dataProviderActivePlayer.summonerName;
                 string championName = this.dataProviderPlayerList.GetChampionNameBySummonerName(summonerName);
@@ -156,7 +182,7 @@ namespace CueLegendKey2
 
         private void ChampionDetailsLoaded(object sender, DataProviderLoadedEventArgs e)
         {
-            if (!dataProviderChampionDetails.lastLoadErrors)
+            if (!dataProviderChampionDetails.loadHasErrors())
             {
                 Logger.Instance.Debug("LoadLiveData ChampionDetailsLoaded");
 
@@ -168,6 +194,7 @@ namespace CueLegendKey2
                         if (skill.id == spell.id)
                         {
                             skill.cooldown = spell.cooldown;
+                            skill.image = spell.spellImage;
                         }
                     }
                 }
@@ -182,6 +209,7 @@ namespace CueLegendKey2
 
         private void OnLiveDataLoaded(DataFetcherLoadedEventArgs e)
         {
+            this.loadLoveDataInProgress = false;
             Logger.Instance.Debug("LoadLiveData DONE!");
             EventHandler<DataFetcherLoadedEventArgs> handler = OnLiveData;
             if (handler != null)
@@ -193,6 +221,7 @@ namespace CueLegendKey2
 
         private void OnLiveDataLoadError(DataFetcherLoadedEventArgs e)
         {
+            this.loadLoveDataInProgress = false;
             Logger.Instance.Debug("LoadLiveData ERROR!");
             EventHandler<DataFetcherLoadedEventArgs> handler = OnLiveDataError;
             if (handler != null)

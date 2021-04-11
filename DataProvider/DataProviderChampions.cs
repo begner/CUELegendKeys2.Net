@@ -48,6 +48,14 @@ namespace CueLegendKey2
             return "";
         }
 
+        protected override FileCache GetCache()
+        {
+            FileCache fileCache = new FileCache();
+            fileCache.SetSubPath($"{currentVersion}");
+            fileCache.SetFileName("champions.json");
+            return fileCache;
+        }
+
         public override string GetUri()
         {
             return $"{dataDragonHost}/cdn/{currentVersion}/data/{locale}/champion.json";
@@ -58,8 +66,9 @@ namespace CueLegendKey2
             return "./mock/champion.json";
         }
 
-        public override void JsonDecode(string jsonData)
+        protected override void DecodeData(System.IO.Stream stream)
         {
+            string jsonData = this.StreamToString(stream);
             JObject rawData = JObject.Parse(jsonData);
             IList<JToken> championList = rawData["data"].ToList();
 

@@ -44,6 +44,9 @@ namespace CueLegendKey2
             this.dataFetcher.OnLiveData += this.LiveDataLoaded;
             this.dataFetcher.OnLiveDataError += this.LiveDataError;
 
+            this.uiUseLocalClientMock.IsChecked = this.dataFetcher.GetUseLocalClientMock();
+            this.uiUseDataDragonMock.IsChecked = this.dataFetcher.GetUseDataDragonMocks();
+
             this.dataFetcher.LoadMainData();
         }
 
@@ -92,6 +95,13 @@ namespace CueLegendKey2
                 this.uiProgressRessource.Maximum = playerStats.resourceMax;
                 this.uiProgressRessource.Value = playerStats.resourceValue;
                 this.uiProgressRessource.Foreground = playerStats.getResourceColor();
+
+                this.uiImageSpellQ.Source = activePlayer.abilities.Q.GetImageAsBitmap();
+                this.uiImageSpellW.Source = activePlayer.abilities.W.GetImageAsBitmap();
+                this.uiImageSpellE.Source = activePlayer.abilities.E.GetImageAsBitmap();
+                this.uiImageSpellR.Source = activePlayer.abilities.R.GetImageAsBitmap();
+
+
             }));
         }
 
@@ -149,14 +159,24 @@ namespace CueLegendKey2
             this.setReloadLiveDataTimerInterval(doubleValue);
         }
 
-        private void uiUseMocksChecked(object sender, RoutedEventArgs e)
+        private void uiUseLocalClientMockChecked(object sender, RoutedEventArgs e)
         {
-            this.dataFetcher.setUseMocks(true);    
+            this.dataFetcher.SetUseLocalClientMock(true);
         }
 
-        private void uiUseMocksUnchecked(object sender, RoutedEventArgs e)
+        private void uiUseLocalClientMockUnchecked(object sender, RoutedEventArgs e)
         {
-            this.dataFetcher.setUseMocks(false);
+            this.dataFetcher.SetUseLocalClientMock(false);
+        }
+
+        private void uiUseDataDragonMockChecked(object sender, RoutedEventArgs e)
+        {
+            this.dataFetcher.SetUseDataDragonMocks(true);
+        }
+
+        private void uiUseDataDragonMockUnchecked(object sender, RoutedEventArgs e)
+        {
+            this.dataFetcher.SetUseDataDragonMocks(false);
         }
     }
 

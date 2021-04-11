@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Windows.Media;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace CueLegendKey2
 {
@@ -91,6 +93,25 @@ namespace CueLegendKey2
         public string displayName { get; set; }
         public string id { get; set; }
         public List<double> cooldown { get; set; }
+        public System.Drawing.Image image { get; set; }
+
+        public BitmapImage GetImageAsBitmap()
+        {
+            if (this.image != null) {
+                Stream ms = new MemoryStream();
+                this.image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                ms.Position = 0;
+
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.StreamSource = ms;
+                bi.EndInit();
+
+                return bi;
+            }
+            return null;
+        }
         public double getCurrentCooldown(double abilityHaste = 0)
         {
             if (abilityLevel > 0)
@@ -148,8 +169,10 @@ namespace CueLegendKey2
             return "./mock/activeplayer.json";
         }
 
-        public override void JsonDecode(string jsonData)
+        protected override void DecodeData(System.IO.Stream stream)
         {
+            string jsonData = this.StreamToString(stream);
+
             JObject rawData = JObject.Parse(jsonData);
             this.summonerName = rawData["summonerName"].ToObject<string>();
 

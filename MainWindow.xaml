@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CueLegendKey2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="550" Width="800">
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -48,7 +48,10 @@
             </StackPanel>
 
             <StackPanel Margin="10,10,10,10">
-                <CheckBox Content="Use Data Mocks" x:Name="uiUseMocks" Grid.Row="0" Grid.Column="0" Checked="uiUseMocksChecked" Unchecked="uiUseMocksUnchecked" />
+                <CheckBox Content="Local Client Mocks" x:Name="uiUseLocalClientMock" Grid.Row="0" Grid.Column="0" 
+                          Checked="uiUseLocalClientMockChecked" Unchecked="uiUseLocalClientMockUnchecked" />
+                <CheckBox Content="DataDragon Mocks" x:Name="uiUseDataDragonMock" Grid.Row="0" Grid.Column="0" 
+                          Checked="uiUseDataDragonMockChecked" Unchecked="uiUseDataDragonMockUnchecked" />
             </StackPanel>
 
         </StackPanel>
@@ -88,6 +91,14 @@
                              Minimum="0"
                              />
             </StackPanel>
+
+            <StackPanel Margin="10,10,10,10" Orientation="Horizontal">
+                <Image x:Name="uiImageSpellQ" Width="50" Height="50" Margin="0,0,10,0"/>
+                <Image x:Name="uiImageSpellW" Width="50" Height="50" Margin="0,0,10,0"/>
+                <Image x:Name="uiImageSpellE" Width="50" Height="50" Margin="0,0,10,0"/>
+                <Image x:Name="uiImageSpellR" Width="50" Height="50" Margin="0,0,10,0"/>
+            </StackPanel>
+            
         </StackPanel>
 
     </Grid>

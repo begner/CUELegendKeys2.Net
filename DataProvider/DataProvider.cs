@@ -19,35 +19,42 @@ namespace CueLegendKey2
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
 
-        public bool useMocks = false;
+        public bool useMocks { get; set; } = false;
+        protected bool lastLoadErrors = false;
+        public bool loadHasErrors()
+        {
+            return lastLoadErrors;
+        }
 
-        public bool lastLoadErrors = false;
+        protected string requestContentType = "text/plain";
+        protected bool autoReportDoneAfterDecode = true;
 
-        public delegate void loadJSONDecodeCallback(string jsonData);
-
-        public delegate void loadJSONLoadedCallback();
 
         public abstract string GetUri();
         public abstract string GetMockFile();
-        public abstract void JsonDecode(string jsonData);
 
-        public string dataDragonHost = "http://ddragon.leagueoflegends.com";
-        public string clientHost = "https://127.0.0.1:2999";
-        public string locale = "de_DE";
+        protected string dataDragonHost = "http://ddragon.leagueoflegends.com";
+        protected string clientHost = "https://127.0.0.1:2999";
+        public string locale { get; set; } = "de_DE";
         public string currentVersion { get; set; }
 
-        public void LoadData()
+        protected virtual FileCache GetCache()
         {
-            this.LoadJSONData(this.GetUri(), this.GetMockFile(), this.JsonDecode, this.JsonLoaded);
+            return null;
         }
 
-        public void JsonLoaded()
+        public virtual void LoadData()
+        {
+            this.LoadWebData(this.GetUri(), this.GetMockFile());
+        }
+
+        protected void DataLoaded()
         {
             DataProviderLoadedEventArgs args = new DataProviderLoadedEventArgs();
             this.OnDataLoaded(args);
         }
 
-        public void OnDataLoaded(DataProviderLoadedEventArgs e)
+        protected void OnDataLoaded(DataProviderLoadedEventArgs e)
         {
             EventHandler<DataProviderLoadedEventArgs> handler = OnData;
             if (handler != null)
@@ -58,17 +65,52 @@ namespace CueLegendKey2
 
         public event EventHandler<DataProviderLoadedEventArgs> OnData;
 
-        private void LoadJSONData(string uri, string mockFile, loadJSONDecodeCallback decode, loadJSONLoadedCallback onReady)
+        protected string StreamToString(Stream stream)
+        {
+            StreamReader reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
+
+        protected virtual void DecodeData(Stream stream)
+        {
+        }
+        
+        protected void LoadWebData(string uri, string mockFile)
         {
             this.lastLoadErrors = false;
+            
+            // MOCK
             if (this.useMocks)
             {
                 // MOCK
-                decode(File.ReadAllText(mockFile));
-                onReady();
+                this.DecodeData(new MemoryStream(File.ReadAllBytes(mockFile)));
+                if (autoReportDoneAfterDecode)
+                {
+                    this.DataLoaded();
+                }
                 return;
             }
 
+            // CACHE
+            
+            FileCache fileCache = this.GetCache();
+            if (fileCache != null)
+            {
+                
+                if (fileCache.Exists())
+                {
+                    this.DecodeData(fileCache.Read());
+                    if (autoReportDoneAfterDecode)
+                    {
+                        this.DataLoaded();
+                    }
+                    return;
+                }
+                
+            }    
+            
+
+            // LOAD
             try
             {
                 var webRequest = WebRequest.Create(uri) as HttpWebRequest;
@@ -77,25 +119,37 @@ namespace CueLegendKey2
                 {
                     return;
                 }
-                webRequest.ContentType = "application/json";
-                using (var s = webRequest.GetResponse().GetResponseStream())
+                webRequest.ContentType = this.requestContentType;
+                using (var responseStream = webRequest.GetResponse().GetResponseStream())
                 {
-                    using (var sr = new StreamReader(s))
+
+                    MemoryStream workStream = new MemoryStream();
+                    responseStream.CopyTo(workStream);
+
+
+                    workStream.Seek(0, SeekOrigin.Begin);
+
+                    this.DecodeData(workStream);
+                    if (autoReportDoneAfterDecode)
                     {
-                        decode(sr.ReadToEnd());
-                        onReady();
+                        this.DataLoaded();
                     }
+
+                    if (fileCache != null)
+                    {
+                        workStream.Seek(0, SeekOrigin.Begin);
+                        fileCache.Write(workStream);
+                    }
+                  
                 }
             }
             catch(Exception exception)
             {
                 Logger.Instance.Debug(exception.Message);
                 this.lastLoadErrors = true;
-                onReady();
-                // do nothing here
+                this.DataLoaded();
             }
-           
-            
         }
+
     }
 }

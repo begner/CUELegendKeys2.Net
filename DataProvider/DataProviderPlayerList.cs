@@ -71,8 +71,9 @@ namespace CueLegendKey2
             return "./mock/playerlist.json";
         }
 
-        public override void JsonDecode(string jsonData)
+        protected override void DecodeData(System.IO.Stream stream)
         {
+            string jsonData = this.StreamToString(stream);
             JObject rawData = JObject.Parse("{\"data\": " + jsonData + "}");
 
             IList<JToken> playerList = rawData["data"].Children().ToList();
