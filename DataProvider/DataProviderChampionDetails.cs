@@ -18,7 +18,7 @@ namespace CueLegendKey2
         public string fullImageName { get; set; }
 
         public Image spellImage = null;
-        public DataProviderAbilityImage dataProviderAbilityImage = null;
+        public DataProviderImageSkill dataProviderImageSkill = null;
         public List<double> cooldown { get; set; }
         public List<double> cost { get; set; }
     }
@@ -73,9 +73,9 @@ namespace CueLegendKey2
             short loadedImages = 0;
             foreach (ChampionSpell spell in this.championSpells)
             {
-                if (spell.dataProviderAbilityImage.image != null)
+                if (spell.dataProviderImageSkill.image != null)
                 {
-                    spell.spellImage = spell.dataProviderAbilityImage.image;
+                    spell.spellImage = spell.dataProviderImageSkill.image;
                     loadedImages++;
                 }
 
@@ -100,10 +100,10 @@ namespace CueLegendKey2
                 // JToken.ToObject is a helper method that uses JsonSerializer internally
                 ChampionSpell spell = result.ToObject<ChampionSpell>();
                 spell.fullImageName = result["image"]["full"].ToObject<string>();
-                spell.dataProviderAbilityImage = new DataProviderAbilityImage();
-                spell.dataProviderAbilityImage.imageFileName = spell.fullImageName;
-                spell.dataProviderAbilityImage.currentVersion = currentVersion;
-                spell.dataProviderAbilityImage.OnData += ImageDataLoaded;
+                spell.dataProviderImageSkill = new DataProviderImageSkill();
+                spell.dataProviderImageSkill.imageFileName = spell.fullImageName;
+                spell.dataProviderImageSkill.currentVersion = currentVersion;
+                spell.dataProviderImageSkill.OnData += ImageDataLoaded;
 
                 this.championSpells.Add(spell);
             }
@@ -112,7 +112,7 @@ namespace CueLegendKey2
             {
                 try
                 {
-                    spell.dataProviderAbilityImage.LoadData();
+                    spell.dataProviderImageSkill.LoadData();
                 } catch(Exception exception)
                 {
                     Logger.Instance.Debug(exception.Message);

@@ -93,25 +93,8 @@ namespace CueLegendKey2
         public string displayName { get; set; }
         public string id { get; set; }
         public List<double> cooldown { get; set; }
-        public System.Drawing.Image image { get; set; }
-
-        public BitmapImage GetImageAsBitmap()
-        {
-            if (this.image != null) {
-                Stream ms = new MemoryStream();
-                this.image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                ms.Position = 0;
-
-                BitmapImage bi = new BitmapImage();
-                bi.BeginInit();
-                bi.CacheOption = BitmapCacheOption.OnLoad;
-                bi.StreamSource = ms;
-                bi.EndInit();
-
-                return bi;
-            }
-            return null;
-        }
+        public MagicImage image { get; set; }
+      
         public double getCurrentCooldown(double abilityHaste = 0)
         {
             if (abilityLevel > 0)

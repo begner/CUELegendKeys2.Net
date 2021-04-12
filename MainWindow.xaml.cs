@@ -96,10 +96,10 @@ namespace CueLegendKey2
                 this.uiProgressRessource.Value = playerStats.resourceValue;
                 this.uiProgressRessource.Foreground = playerStats.getResourceColor();
 
-                this.uiImageSpellQ.Source = activePlayer.abilities.Q.GetImageAsBitmap();
-                this.uiImageSpellW.Source = activePlayer.abilities.W.GetImageAsBitmap();
-                this.uiImageSpellE.Source = activePlayer.abilities.E.GetImageAsBitmap();
-                this.uiImageSpellR.Source = activePlayer.abilities.R.GetImageAsBitmap();
+                this.uiImageSpellQ.Source = activePlayer.abilities.Q.image.GetImageAsBitmap();
+                this.uiImageSpellW.Source = activePlayer.abilities.W.image.GetImageAsBitmap();
+                this.uiImageSpellE.Source = activePlayer.abilities.E.image.GetImageAsBitmap();
+                this.uiImageSpellR.Source = activePlayer.abilities.R.image.GetImageAsBitmap();
 
 
             }));

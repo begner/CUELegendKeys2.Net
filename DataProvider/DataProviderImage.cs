@@ -12,24 +12,17 @@ using System.IO;
 namespace CueLegendKey2
 {
 
-    class DataProviderAbilityImage : DataProvider
+    public abstract class DataProviderImage : DataProvider
     {
         public Image image = null;
         public string imageFileName { get; set; } = "";
-        public override string GetUri()
-        {
-            return $"{dataDragonHost}/cdn/{currentVersion}/img/spell/{imageFileName}";
-        }
-
-        public override string GetMockFile()
-        {
-            return "./mock/AnnieQ.json";
-        }
+        
+        protected string cacheSubPath { get; set; } = "";
 
         protected override FileCache GetCache()
         {
             FileCache fileCache = new FileCache();
-            fileCache.SetSubPath($"{currentVersion}/spell");
+            fileCache.SetSubPath($"{currentVersion}/{cacheSubPath}");
             fileCache.SetFileName(this.imageFileName);
             return fileCache;
         }

@@ -194,7 +194,7 @@ namespace CueLegendKey2
                         if (skill.id == spell.id)
                         {
                             skill.cooldown = spell.cooldown;
-                            skill.image = spell.spellImage;
+                            skill.image = new MagicImage(spell.spellImage);
                         }
                     }
                 }
