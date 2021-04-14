@@ -27,6 +27,7 @@ namespace CueLegendKey2
     {
         private DataProviderVersions dataProviderVersions = new DataProviderVersions();
         private DataProviderChampions dataProviderChampions = new DataProviderChampions();
+        private DataProviderSummonerSpells dataProviderSummonerSpells = new DataProviderSummonerSpells();
         private DataProviderActivePlayer dataProviderActivePlayer = new DataProviderActivePlayer();
         private DataProviderChampionDetails dataProviderChampionDetails = new DataProviderChampionDetails();
         private DataProviderPlayerList dataProviderPlayerList = new DataProviderPlayerList();
@@ -35,7 +36,6 @@ namespace CueLegendKey2
         {
             return dataProviderVersions;
         }
-
         public DataProviderChampions GetChampions()
         {
             return dataProviderChampions;
@@ -44,15 +44,17 @@ namespace CueLegendKey2
         {
             return dataProviderActivePlayer;
         }
-
         public DataProviderChampionDetails GetChampionDetails()
         {
             return dataProviderChampionDetails;
         }
-
         public DataProviderPlayerList GetPlayerList()
         {
             return dataProviderPlayerList;
+        }
+        public DataProviderSummonerSpells GetSummonerSpells()
+        {
+            return dataProviderSummonerSpells;
         }
 
 
@@ -80,6 +82,7 @@ namespace CueLegendKey2
             this.dataProviderVersions.useMocks = state;
             this.dataProviderChampions.useMocks = state;
             this.dataProviderChampionDetails.useMocks = state;
+            this.dataProviderSummonerSpells.useMocks = state;
         }
 
         private DateTime loadMainDataStartTime;
@@ -91,6 +94,7 @@ namespace CueLegendKey2
             // 1st Stream
             this.dataProviderVersions.OnData += this.VersionLoaded;
             this.dataProviderChampions.OnData += this.ChampionsLoaded;
+            this.dataProviderSummonerSpells.OnData += this.SummonerSpellsLoaded;
 
             // 2nd Stream
             this.dataProviderActivePlayer.OnData += this.ActivePlayerLoaded;
@@ -115,9 +119,14 @@ namespace CueLegendKey2
         private void ChampionsLoaded(object sender, DataProviderLoadedEventArgs e)
         {
             Logger.Instance.Debug("LoadMainData ChampionsLoaded");
+            this.dataProviderSummonerSpells.currentVersion = this.dataProviderVersions.getCurrentVersion();
+            this.dataProviderSummonerSpells.LoadData();
+        }
+        private void SummonerSpellsLoaded(object sender, DataProviderLoadedEventArgs e)
+        {
+            Logger.Instance.Debug("LoadMainData SummonerSpellsLoaded");
             this.OnMainDataLoaded(new DataFetcherLoadedEventArgs(this.loadMainDataStartTime));
         }
-
         private void OnMainDataLoaded(DataFetcherLoadedEventArgs e)
         {
             Logger.Instance.Debug("LoadMainData DONE!");
@@ -187,7 +196,7 @@ namespace CueLegendKey2
                 Logger.Instance.Debug("LoadLiveData ChampionDetailsLoaded");
 
                 // Merge cooldowns from ChampionDetails to Abilities
-                foreach (ChampionSpell spell in dataProviderChampionDetails.championSpells)
+                foreach (ChampionSpell spell in this.dataProviderChampionDetails.championSpells)
                 {
                     foreach (Skill skill in dataProviderActivePlayer.abilities.getSkillsAsList())
                     {
@@ -198,6 +207,7 @@ namespace CueLegendKey2
                         }
                     }
                 }
+                this.dataProviderActivePlayer.abilities.Passive.image = new MagicImage(this.dataProviderChampionDetails.championPassive.dataProviderImagePassive.image);
                 this.OnLiveDataLoaded(new DataFetcherLoadedEventArgs(this.loadLiveDataStartTime));
             }
             else

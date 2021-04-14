@@ -128,6 +128,8 @@ namespace CueLegendKey2
     {
         public string displayName { get; set; }
         public string id { get; set; }
+        public MagicImage image { get; set; }
+
         public override string ToString()
         {
             return $"{displayName}";

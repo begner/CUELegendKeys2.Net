@@ -68,6 +68,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataProvider\DataProviderSummonerSpells.cs" />
+    <Compile Include="DataProvider\DataProviderImageChampion.cs" />
+    <Compile Include="DataProvider\DataProviderImagePassive.cs" />
+    <Compile Include="GridLengthAnimation.cs" />
     <Compile Include="MagicImage.cs" />
     <Compile Include="DataFetcher.cs" />
     <Compile Include="DataProvider\DataProviderImage.cs" />

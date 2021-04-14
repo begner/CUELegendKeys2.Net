@@ -9,6 +9,18 @@ using System.Windows.Media;
 
 namespace CueLegendKey2
 {
+    internal class PlayerSummonerSpell
+    {
+        public string displayName { get; set; }
+        public string rawDescription { get; set; }
+        public string rawDisplayName { get; set; }
+    }
+
+    internal class PlayerSummonerSpells
+    {
+        public PlayerSummonerSpell summonerSpellOne { get; set; } = new PlayerSummonerSpell();
+        public PlayerSummonerSpell summonerSpellTwo { get; set; } = new PlayerSummonerSpell();
+    }
     internal class Player
     {
         public string championName { get; set; }
@@ -17,6 +29,7 @@ namespace CueLegendKey2
         public bool isDead { get; set; }
         public short level { get; set; }
         public double respawnTimer { get; set; }
+        public PlayerSummonerSpells summonerSpells { get; set; } = new PlayerSummonerSpells();
 
         public override string ToString()
         {
